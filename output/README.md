@@ -1,0 +1,1 @@
+This directory is where the output files `stack.json`, and `line.json` need to be created.

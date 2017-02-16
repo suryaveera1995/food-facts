@@ -1,0 +1,132 @@
+<html>
+<head>
+  <title>
+    Line Chart
+  </title>
+  <script src = "../d3/d3.js"></script>
+  <link href = "../css/commons.css"  rel = "stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel = "stylesheet" />
+</head>
+<body>
+  <section class = "container text-center">
+    <div class = "row">
+      <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <h1>Results</h1s>
+        </div>
+      </div>
+      <div class = "row">
+        <div class = "col-xs-12 col-sm-12 col-md-12 col-lg-12" id = "svg-container">
+
+        </div>
+      </div>
+    </section>
+    <script>
+    d3.json("../output/line.json", function(err, data){
+
+      var margin = {top: 20, right: 160, bottom: 35, left: 30};
+
+      var width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
+
+      var nutrients = Object.keys(data);
+      var xAxisValues = [];
+      //fetch the regions from here
+      var attempt = 0;
+
+      for(var i = 0; i<nutrients.length; i++){
+        if(attempt > 0) break;
+        var array = data[nutrients[i]];
+        array.forEach(function(pair){
+          xAxisValues.push(pair['region']);
+        })
+        attempt++;
+      }
+
+      var svg = d3.select("#svg-container")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      var xScale = d3.scale.ordinal()
+      .domain(xAxisValues.map(function(d) { return d; }))
+      .rangePoints([0, width]);
+
+      console.log(xScale.domain());
+
+      var yScale = d3.scale.linear()
+      .domain([0, 30])
+      .range([height, 0]);
+
+      var yAxis = d3.svg.axis()
+      .scale(yScale)
+      .orient("left")
+      .ticks(30)
+      .tickSize(-width, 0, 0)
+      .tickFormat( function(d) { return d } );
+
+      var xAxis = d3.svg.axis()
+      .scale(xScale)
+      .orient("bottom");
+
+      svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+      svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+      var lineGen = d3.svg.line()
+      .x(function(d) {console.log(d['region']);
+      return xScale(d['region']);
+    })
+    .y(function(d) {
+      return yScale(d['value']);
+    })
+    .interpolate("linear");
+
+    var colors = ["#27ae60", "#2980b9", "#e74c3c"];
+
+    nutrients.forEach(function(key, idx){
+      console.log(data[key]);
+      svg.append('path')
+      .attr('d', lineGen(data[key]))
+      .attr('stroke', colors[idx])
+      .attr('stroke-width', 2)
+      .attr('fill', 'none');
+    });
+
+    var legend = svg.selectAll(".legend")
+    .data(colors)
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(30," + i * 19 + ")"; });
+
+    legend.append("rect")
+    .attr("x", width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", function(d, i) {return colors.slice().reverse()[i];});
+
+    legend.append("text")
+    .attr("x", width + 5)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "start")
+    .text(function(d, i) {
+      switch (i) {
+        case 0: return "Carbohydrates";
+        case 1: return "Proteins";
+        case 2: return "Fat";
+      }
+    });
+
+  });
+
+  </script>
+</body>
+</html>

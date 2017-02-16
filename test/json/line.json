@@ -1,0 +1,44 @@
+{
+  "fat": [
+    {
+      "region": "North Europe",
+      "value": 14.315642904290442
+    },
+    {
+      "region": "Central Europe",
+      "value": 13.048706664470458
+    },
+    {
+      "region": "South Europe",
+      "value": 13.084852536360396
+    }
+  ],
+  "proteins": [
+    {
+      "region": "North Europe",
+      "value": 7.149060362173043
+    },
+    {
+      "region": "Central Europe",
+      "value": 7.593973108323415
+    },
+    {
+      "region": "South Europe",
+      "value": 6.0979650623885835
+    }
+  ],
+  "carbohydrates": [
+    {
+      "region": "North Europe",
+      "value": 28.460266844562994
+    },
+    {
+      "region": "Central Europe",
+      "value": 27.95382004300328
+    },
+    {
+      "region": "South Europe",
+      "value": 27.231592198581563
+    }
+  ]
+}
